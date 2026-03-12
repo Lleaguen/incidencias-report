@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Panel de Incidencias 5S</title>
+
+<link rel="stylesheet" href="incidencias.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-content">
+        <h1>Panel de Incidencias</h1>
+        <span class="subtitle">Control de incidencias operativas</span>
+    </div>
+</header>
+
+<div class="panel-top">
+
+<div class="contador">
+Incidencias registradas: 
+<span id="contadorIncidencias">0</span>
+</div>
+
+<button id="btnNuevaIncidencia" class="btn-nueva">
++ Nueva Incidencia
+</button>
+
+</div>
+
+<main class="container">
+	<div class="subheader">
+
+    <!-- Filtros -->
+    <div class="filtros">
+
+        <label for="filtroTipo">Tipo de incidencia</label>
+
+        <select id="filtroTipo">
+            <option value="todos">Todas las incidencias</option>
+        </select>
+
+    </div>
+     <!-- Formulario de Registro - Modal -->
+	<div id="formModal" class="modal-form">
+
+		<div class="form-container">
+
+		<h2>Nueva Incidencia</h2>
+
+			<form id="formIncidencia">
+
+				<label>Tipo de incidencia</label>
+				<input type="text" id="tipo" required>
+
+				<label>Descripción</label>
+				<textarea id="descripcion" required></textarea>
+
+				<label>Foto Antes (ruta)</label>
+				<input type="text" id="fotoAntes">
+
+				<label>Foto Después (ruta)</label>
+				<input type="text" id="fotoDespues">
+
+				<div class="form-actions">
+
+					<button type="submit" class="btn-guardar">
+					Guardar
+					</button>
+
+					<button type="button" id="cerrarForm" class="btn-cancelar">
+					Cancelar
+					</button>
+
+				</div>
+
+			</form>
+
+		</div>
+
+	</div>
+	</div>
+    <!-- Contenedor de tarjetas -->
+    <section id="contain" class="cards"></section>
+
+</main>
+ 
+<!-- Modal de imagen -->
+<div id="imageModal" class="image-modal">
+
+    <span class="modal-close">&times;</span>
+
+    <img id="modalImage" class="modal-image" alt="Imagen de incidencia">
+
+</div>
+
+
+<!-- Script -->
+<script src="index.js" defer></script>
+
+</body>
+</html>
