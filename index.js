@@ -276,65 +276,63 @@ document.addEventListener("DOMContentLoaded", () => {
        GUARDAR INCIDENCIA
     ========================= */
 
-    const form = document.getElementById("formIncidencia");
+  const form = document.getElementById("formIncidencia");
 
-    if(form){
+if(form){
 
-        form.addEventListener("submit", async function(e){
+    form.addEventListener("submit", async function(e){
 
-            e.preventDefault();
+        e.preventDefault();
 
-            const tipo = document.getElementById("tipo").value;
-            const descripcion = document.getElementById("descripcion").value;
+        const tipo = document.getElementById("tipo").value;
+        const descripcion = document.getElementById("descripcion").value;
 
-            const fileAntes = document.getElementById("fotoAntes").files[0];
-            const fileDespues = document.getElementById("fotoDespues").files[0];
+        const fileAntes = document.getElementById("fotoAntes").files[0];
+        const fileDespues = document.getElementById("fotoDespues").files[0];
 
-            let fotoAntes = "";
-            let fotoDespues = "";
+        let fotoAntes = "";
+        let fotoDespues = "";
 
-            if(fileAntes){
-                fotoAntes = await convertirBase64(fileAntes);
-            }
+        if(fileAntes){
+            fotoAntes = await convertirBase64(fileAntes);
+        }
 
-            if(fileDespues){
-                fotoDespues = await convertirBase64(fileDespues);
-            }
+        if(fileDespues){
+            fotoDespues = await convertirBase64(fileDespues);
+        }
 
-            try{
+        try{
 
-               const formData = new FormData();
+            const formData = new FormData();
 
-				formData.append("tipo", tipo);
-				formData.append("descripcion", descripcion);
-				formData.append("fotoAntes", fotoAntes);
-				formData.append("fotoDespues", fotoDespues);
+            formData.append("tipo", tipo);
+            formData.append("descripcion", descripcion);
+            formData.append("fotoAntes", fotoAntes);
+            formData.append("fotoDespues", fotoDespues);
 
-				await fetch(URL_API,{
-				    method:"POST",
-				    body:formData
-				});
+            const response = await fetch(URL_API,{
+                method:"POST",
+                body:formData
+            });
 
+            const result = await response.json();
 
-                const result = await response.json();
+            console.log("Respuesta servidor:", result);
 
-                console.log("Respuesta servidor:", result);
+            formModal.style.display = "none";
+            form.reset();
 
-                formModal.style.display = "none";
-                form.reset();
+            fetchData();
 
-                fetchData();
+        }catch(error){
 
-            }catch(error){
+            console.error("Error al guardar incidencia",error);
 
-                console.error("Error al guardar incidencia",error);
+        }
 
-            }
+    });
 
-        });
+}
 
-    }
+fetchData();
 
-    fetchData();
-
-});
