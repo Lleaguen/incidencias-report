@@ -1,6 +1,10 @@
-const URL_API = "https://script.google.com/macros/s/AKfycbyiJUsD4E9rDl3hsNPebjsiRHyq5puxX8rUHec3K5xwmHyQEoX7V3Yj4kj4oehqASFZWw/exec";
+const URL_API = "https://script.google.com/macros/s/AKfycbwLrzCt8OerXd-omhTZiwOtdvCT7azRc--zoVKB0L605xPw-K3z5M55R3Rzd6jRjVFpJw/exec";
 
 let incidencias = [];
+
+/* =========================
+   CARGAR DATOS
+========================= */
 
 async function fetchData() {
 
@@ -23,17 +27,23 @@ async function fetchData() {
 
 }
 
+/* =========================
+   CONTADOR
+========================= */
+
 function actualizarContador(){
 
     const contador = document.getElementById("contadorIncidencias");
 
     if(contador){
-
         contador.textContent = incidencias.length;
-
     }
 
 }
+
+/* =========================
+   FILTROS
+========================= */
 
 function cargarTipos(){
 
@@ -55,13 +65,17 @@ function cargarTipos(){
 
 }
 
-function formatFecha(isoString) {
+/* =========================
+   FORMATEO FECHA
+========================= */
 
-    if (!isoString || isoString === "") return "N/A";
+function formatFecha(valor) {
 
-    const fecha = new Date(isoString);
+    if (!valor) return "N/A";
 
-    return isNaN(fecha) ? isoString : fecha.toLocaleDateString('es-ES', {
+    const fecha = new Date(valor);
+
+    return isNaN(fecha) ? valor : fecha.toLocaleDateString('es-AR', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
@@ -69,19 +83,23 @@ function formatFecha(isoString) {
 
 }
 
-function formatHora(isoString) {
+function formatHora(valor) {
 
-    if (!isoString || isoString === "") return "N/A";
+    if (!valor) return "N/A";
 
-    const fecha = new Date(isoString);
+    const fecha = new Date(valor);
 
-    return isNaN(fecha) ? isoString : fecha.toLocaleTimeString('es-ES', {
+    return isNaN(fecha) ? valor : fecha.toLocaleTimeString('es-AR', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
     });
 
 }
+
+/* =========================
+   RENDER CARDS
+========================= */
 
 function renderCards(data) {
 
@@ -95,62 +113,90 @@ function renderCards(data) {
         const descripcion = item[2] || "Sin descripción";
         const fechaFormateada = formatFecha(item[5]);
         const horaFormateada = formatHora(item[6]);
-        const fotoAntes = item[7];
-        const fotoDespues = item[8];
+
+        const fotoAntes = item[7] || "";
+        const fotoDespues = item[8] || "";
 
         return `
-            <article class="card">
 
-                <h3>${tipo}</h3>
+        <article class="card">
 
-                <p>${descripcion}</p>
+            <h3>${tipo}</h3>
 
-                <div class="date-box">
+            <p>${descripcion}</p>
 
-                    <div class="date-item">
-                        <span>Fecha</span>
-                        ${fechaFormateada}
-                    </div>
+            <div class="date-box">
 
-                    <div class="date-item">
-                        <span>Hora</span>
-                        ${horaFormateada}
-                    </div>
-
+                <div class="date-item">
+                    <span>Fecha</span>
+                    ${fechaFormateada}
                 </div>
 
-                <div class="fotos">
-
-                    <div class="foto-wrapper">
-                        <span>Antes</span>
-                        <img src="${fotoAntes}" alt="Antes"
-                        onerror="this.src='https://placehold.co/600x400'">
-                    </div>
-
-                    <div class="foto-wrapper">
-                        <span>Después</span>
-                        <img src="${fotoDespues}" alt="Después"
-                        onerror="this.src='https://placehold.co/600x400'">
-                    </div>
-
+                <div class="date-item">
+                    <span>Hora</span>
+                    ${horaFormateada}
                 </div>
 
-            </article>
+            </div>
+
+            <div class="fotos">
+
+                <div class="foto-wrapper">
+                    <span>Antes</span>
+                    <img src="${fotoAntes || 'https://placehold.co/600x400'}"
+                    alt="Antes">
+                </div>
+
+                <div class="foto-wrapper">
+                    <span>Después</span>
+                    <img src="${fotoDespues || 'https://placehold.co/600x400'}"
+                    alt="Después">
+                </div>
+
+            </div>
+
+        </article>
+
         `;
 
     }).join("");
 
 }
 
+/* =========================
+   CONVERTIR IMAGEN BASE64
+========================= */
+
+function convertirBase64(file){
+
+    return new Promise((resolve,reject)=>{
+
+        const reader = new FileReader();
+
+        reader.readAsDataURL(file);
+
+        reader.onload = () => resolve(reader.result);
+
+        reader.onerror = error => reject(error);
+
+    });
+
+}
+
+/* =========================
+   EVENTOS DOM
+========================= */
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const modal = document.getElementById("imageModal");
     const modalImg = document.getElementById("modalImage");
     const closeBtn = document.querySelector(".modal-close");
-
     const formModal = document.getElementById("formModal");
 
-    /* MODAL DE IMAGEN */
+    /* =========================
+       MODAL DE IMAGEN
+    ========================= */
 
     document.addEventListener("click", function (e) {
 
@@ -163,23 +209,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    closeBtn.onclick = function () {
+    closeBtn.onclick = () => modal.style.display = "none";
 
-        modal.style.display = "none";
-
-    };
-
-    modal.onclick = function (e) {
+    modal.onclick = (e) => {
 
         if (e.target === modal) {
-
             modal.style.display = "none";
-
         }
 
     };
 
-    /* FILTRO */
+    /* =========================
+       FILTRO
+    ========================= */
 
     document.getElementById("filtroTipo").addEventListener("change", function(){
 
@@ -198,7 +240,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    /* ABRIR FORMULARIO */
+    /* =========================
+       ABRIR FORMULARIO
+    ========================= */
 
     const btnNueva = document.getElementById("btnNuevaIncidencia");
 
@@ -212,7 +256,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    /* CERRAR FORMULARIO */
+    /* =========================
+       CERRAR FORMULARIO
+    ========================= */
 
     const cerrarForm = document.getElementById("cerrarForm");
 
@@ -226,7 +272,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    /* GUARDAR INCIDENCIA */
+    /* =========================
+       GUARDAR INCIDENCIA
+    ========================= */
 
     const form = document.getElementById("formIncidencia");
 
@@ -238,12 +286,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const tipo = document.getElementById("tipo").value;
             const descripcion = document.getElementById("descripcion").value;
-            const fotoAntes = document.getElementById("fotoAntes").value;
-            const fotoDespues = document.getElementById("fotoDespues").value;
+
+            const fileAntes = document.getElementById("fotoAntes").files[0];
+            const fileDespues = document.getElementById("fotoDespues").files[0];
+
+            let fotoAntes = "";
+            let fotoDespues = "";
+
+            if(fileAntes){
+                fotoAntes = await convertirBase64(fileAntes);
+            }
+
+            if(fileDespues){
+                fotoDespues = await convertirBase64(fileDespues);
+            }
 
             try{
 
-                await fetch(URL_API,{
+                const response = await fetch(URL_API,{
                     method:"POST",
                     headers:{
                         "Content-Type":"application/json"
@@ -256,8 +316,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     })
                 });
 
-                formModal.style.display = "none";
+                const result = await response.json();
 
+                console.log("Respuesta servidor:", result);
+
+                formModal.style.display = "none";
                 form.reset();
 
                 fetchData();

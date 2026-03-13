@@ -361,6 +361,11 @@ border-radius:6px;
 cursor:pointer;
 }
 
+.btn-guardar:hover, .btn-cancelar:hover{
+    opacity: 0.8
+
+}
+
 .btn-cancelar{
 background:#ef4444;
 color:white;
@@ -372,5 +377,6 @@ cursor:pointer;
 
 .subheader{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: center;
 }

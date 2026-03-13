@@ -22,21 +22,19 @@
     </div>
 </header>
 
-<div class="panel-top">
 
-<div class="contador">
-Incidencias registradas: 
-<span id="contadorIncidencias">0</span>
-</div>
-
-<button id="btnNuevaIncidencia" class="btn-nueva">
-+ Nueva Incidencia
-</button>
-
-</div>
 
 <main class="container">
 	<div class="subheader">
+
+	<div class="contador">
+	Incidencias registradas: 
+	<span id="contadorIncidencias">0</span>
+	</div>
+
+	<button id="btnNuevaIncidencia" class="btn-nueva">
+	+ Nueva Incidencia
+	</button>
 
     <!-- Filtros -->
     <div class="filtros">
@@ -64,10 +62,10 @@ Incidencias registradas:
 				<textarea id="descripcion" required></textarea>
 
 				<label>Foto Antes (ruta)</label>
-				<input type="text" id="fotoAntes">
+				<input type="file" accept="image/*" capture="camera" id="fotoAntes">
 
 				<label>Foto Después (ruta)</label>
-				<input type="text" id="fotoDespues">
+				<input type="file" accept="image/*" capture="camera" id="fotoDespues">
 
 				<div class="form-actions">
 
