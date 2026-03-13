@@ -303,18 +303,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try{
 
-                const response = await fetch(URL_API,{
-                    method:"POST",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify({
-                        tipo,
-                        descripcion,
-                        fotoAntes,
-                        fotoDespues
-                    })
-                });
+                await fetch(URL_API,{
+				    method:"POST",
+				    body:JSON.stringify({
+				        tipo,
+				        descripcion,
+				        fotoAntes,
+				        fotoDespues
+				    })
+				});
 
                 const result = await response.json();
 
