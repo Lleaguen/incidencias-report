@@ -303,15 +303,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try{
 
-                await fetch(URL_API,{
+               const formData = new FormData();
+
+				formData.append("tipo", tipo);
+				formData.append("descripcion", descripcion);
+				formData.append("fotoAntes", fotoAntes);
+				formData.append("fotoDespues", fotoDespues);
+
+				await fetch(URL_API,{
 				    method:"POST",
-				    body:JSON.stringify({
-				        tipo,
-				        descripcion,
-				        fotoAntes,
-				        fotoDespues
-				    })
+				    body:formData
 				});
+
 
                 const result = await response.json();
 
